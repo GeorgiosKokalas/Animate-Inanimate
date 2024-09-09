@@ -1,0 +1,33 @@
+%% DESCRIPTION
+% Function called by: main.m
+% Role of function is to begin the program, initiate parameters, start the Screen and Audio  
+% Returns all the parameters that might be needed for the program to run the trials  
+% Input: None
+% Output: 
+%   - parameters: parameters to be used for the experiment
+
+%% CODE
+function parameters = Start_Up()
+    % Clear the command line and the screen
+    sca;
+    close all;
+    clc;
+    
+    % Generate the parameters that will be used in the experiment
+    parameters = InsertParams(Patient_Name);
+    
+    % The saving Directory probably does not exist, so create it.
+    disp(parameters.output_dir);
+    if ~exist(parameters.output_dir, "dir"); mkdir(parameters.output_dir); end
+    
+    % Initialize the Screen
+    SetUpScreen(parameters);
+
+    % Initialize the Sound
+    % parameters.audio = struct;
+    % parameters.audio = SetUpAudio(parameters.audio);
+end
+
+%% CHANGELOG 
+% Georgios Kokalas Spring/Summer 2024
+%   - Created and Adjusted the file

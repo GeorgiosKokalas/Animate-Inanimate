@@ -1,0 +1,10 @@
+% Miscelaneous function
+% Generates participant ID per the requirements of the experiment.
+function GenerateID(Exp_Env)  
+    switch char(lower(Exp_Env))
+        case 'emu'
+            [emuRunNum,ID] = getNextLogEntry();
+            savefname = sprintf('EMU-%04d_subj-%s_task-4MAB_run-%02d',emuRunNum,sub_label,taskRunNum);
+            TaskComment('start',savefname);
+    end
+end
