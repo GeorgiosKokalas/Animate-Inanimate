@@ -17,11 +17,11 @@ function parameters = Start_Up()
     parameters = Insert_Params();
     
     % The saving Directory probably does not exist, so create it.
-    disp(parameters.outputDir);
-    if ~exist(parameters.outputDir, "dir"); mkdir(parameters.outputDir); end
+    disp(parameters.output_dir);
+    if ~exist(parameters.output_dir, "dir"); mkdir(parameters.output_dir); end
     
     % Initialize the Screen
-    Set_Up_Screen(parameters);
+    SetUpScreen(parameters);
 
     % Initialize the Sound
     % parameters.audio = struct;
@@ -34,4 +34,4 @@ end
 
 % Georgios Kokalas 9th Sept. 2024
 %   - Altered implementation of Insert_Params
-%   - Changed Naming Conventions
+%   - Changed Naming conventions

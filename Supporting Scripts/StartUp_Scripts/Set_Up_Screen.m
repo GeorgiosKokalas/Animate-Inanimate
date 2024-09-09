@@ -1,10 +1,12 @@
+%% DESCRIPTION
 % Function called by: StartUp.m
 % Role of function is to initialize PsychToolBox and the Screen for the experiment  
 % Parameters: 
 %   - Pars (A handle to the parameters)
 % Return Values: None
 
-function SetUpScreen(Pars)
+%% CODE
+function Set_Up_Screen(Pars)
     % Startup PsychToolBox 
     PsychDefaultSetup(2);
 
@@ -21,3 +23,9 @@ function SetUpScreen(Pars)
     Screen('TextFont', Pars.screen.window, Pars.text.font.default);
 end
 
+%% CHANGLOG
+% Georgios Kokalas - Spring/Summer 2024
+%   - Created and Adjusted the file
+
+% Georgios Kokalas - 9th Sept. 2024
+%   - Changed Nameng conventions

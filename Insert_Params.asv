@@ -1,3 +1,4 @@
+%% DESCRIPTION
 % Function called by: StartUp.m
 % Role of function is to generate all user-inserted parameters 
 % This means that any value that can be safely changed by the user should be done here. 
@@ -5,7 +6,8 @@
 % Return Values: 
 %   - params (struct that contains all inserted parameters)
 
-function params = InsertParams(Patient_Name)
+%% CODE
+function params = Insert_Params()
     params = ParameterClass(Patient_Name);
     load('colors.mat','color_list');
 
@@ -13,15 +15,11 @@ function params = InsertParams(Patient_Name)
     % User defined variables below %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    % params.screen - Determines the color of the screen the participant will be playing in 
-    params.screen.color = color_list.black;      % RGBA - Determines the color of the screen
-    
-    % Optional parameters, best left untouched.
-    params.screen.screen = max(Screen('Screens')); % Select the Screen you want to use.
-    params.screen.start_point = [0, 0];            % Vector - Determines the upmost left corner of the screen. [0,0] is the default 
-    params.screen.window_height = 0;               % Integer - Determines the Height of the window. 0 will make the program FullScreen 
-    params.screen.window_width = 0;                % Integer - Determines the Width of the window. 0 will make the program FullScreen
-    
+    % Change Screen Parameters
+    % params.screen.change_screen(2);
+    % params.screen.change_framerate(60);
+    % params.screen.change_bgColor(color_list.black);
+
     % Text parameters
     % Text Font Parameters - Determine the font used in the experiment
     params.text.font.default = 'Helvetica';    % String - Determines the type of font used in the experiment
@@ -43,6 +41,19 @@ function params = InsertParams(Patient_Name)
     % End of Settings %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    ValidateParams(params);
+    Validate_Params(params);
 end
 
+
+%% CHANGELOG
+% Georgios Kokalas - Spring/Summer 2024
+%   - Created and Adjusted the file
+
+% Georgios Kokalas - 6th Sept. 2024
+%   - Adjusted some of the parameters
+%       - Deleted disbtn, trial and target configurations as they are no longer used  
+%       - Changed screen configuration to be inside of the screen class  
+%       - Changed text sizes to include only relevant items    
+%       - Changed the trial configurations:
+%           - Deleted cpuWaitS, radiusPercent   
+%           - Added 

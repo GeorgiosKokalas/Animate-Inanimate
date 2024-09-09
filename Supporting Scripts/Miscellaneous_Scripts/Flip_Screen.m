@@ -21,7 +21,7 @@ function time = Flip_Screen(Pars)
     end
     
     % Flip the Screen and take the time
-    time = Screen('Flip', Pars.screen.screen);
+    time = Screen('Flip', Pars.screen.window);
     lastFrameTime = time;
 end
 

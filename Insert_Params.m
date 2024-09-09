@@ -1,0 +1,68 @@
+%% DESCRIPTION
+% Function called by: StartUp.m
+% Role of function is to generate all user-inserted parameters 
+% This means that any value that can be safely changed by the user should be done here. 
+% Input: None 
+% Return Values: 
+%   - params (struct that contains all inserted parameters)
+
+%% CODE
+function params = Insert_Params()
+    params = ParameterClass(Patient_Name);
+    load('colors.mat','color_list');
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % User defined variables below %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    % Change Screen Parameters
+    % params.screen.change_screen(2);
+    % params.screen.change_framerate(60);
+    % params.screen.change_bgColor(color_list.black);
+
+    % Text parameters
+    % Text Font Parameters - Determine the font used in the experiment
+    params.text.font.default = 'Helvetica';    % String - Determines the type of font used in the experiment
+
+    % Text Size parameters - Determine the size of text in given situations
+    params.text.size.default = 40;     % Natural Number - Determines the default text size
+    params.text.size.present = 100;    % Natural Number - Determines the text size for the word shown for a full second
+    params.text.size.choices = 50;     % Natural Number - Determines the text size for the words Animate/Inanimate
+    
+    % Trial Parameters
+    params.trial.num = 1;                 % Natural Number - Determines the number of trials per block
+    params.trial.showIntro = true;        % Logical - Determines whether or not the introduction will be shown
+    params.trial.presentDurS = 1;         % Positive Number - Determines for how long the presented word will be visible for
+    params.trial.choiceDurS = 0.4;        % Positive Number - Determines for how long the presented word will be visible for
+    params.trial.photoDiodeDurS = 0.25;   % Positive Number - Determines how long the photodiode will be shown for
+    
+    % ID Parameters
+    params.ID.Name = 'TEST';        % String - Determines the name of the test subject
+    params.ID.ExpEnv = 'Bcm-Emu';   % String - Determines the experimental environment
+    params.ID.ForceEnv = true;      % Logical - Determines if we will enforce errors associated with the experimental environment   
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % End of Settings %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    Validate_Params(params);
+end
+
+
+%% CHANGELOG
+% Georgios Kokalas - Spring/Summer 2024
+%   - Created and Adjusted the file
+
+% Georgios Kokalas - 6th Sept. 2024
+%   - Adjusted some of the parameters
+%       - Deleted disbtn and target configurations as they are no longer used  
+%       - Changed screen configuration to be inside of the screen class  
+%       - Changed text sizes to include only relevant items    
+%       - Changed the trial configurations:
+%           - Deleted cpuWaitS, radiusPercent   
+%           - Added PresentDurS, ChoiceDurS    
+
+% Georgios Kokalas - 9th Sept. 2024
+%   - Adjusted naming conventions
+%   - Changed screen value changing
+%   - Added ID configuration
