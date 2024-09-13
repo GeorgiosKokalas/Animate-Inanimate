@@ -16,18 +16,42 @@ function EventCell = Create_Event(ID, EventType, varargin)
     switch string(EventType)
         % GENERIC EVENTS
         case "taskStart"
-            eventMsg = "Task Start";
+            eventMsg = "Task Start\n";
         case "taskStop"
-            eventMsg = "Task Ended Successfully";
+            eventMsg = "Task Ended Successfully\n";
         case "taskPause"
-            eventMsg = "Task Paused";
+            eventMsg = "Task Paused\n";
         case "taskResume"
-            eventMsg = "Task Resumed";
+            eventMsg = "Task Resumed\n";
         case "taskAbort"
-            eventMsg = "Task Aborted";
+            eventMsg = "Task Aborted\n";
 
         % TASK SPECIFIC EVENTS
+        case "blockStart"
+            eventMsg = sprintf("Block %d Start\n", varargin{1});
+        case "blockEnd"
+            eventMsg = sprintf("Block %d End\n", varargin{1});
 
+        case "trialStart"
+            eventMsg = sprintf("Trial %d Start in Block %d\n", varargin{2}, varargin{1});
+        case "trialEnd"
+            eventMsg = sprintf("Trial %d End in Block %d\n", varargin{2}, varargin{1});
+        case "trialFixationStart"
+            eventMsg = sprintf("Trial %d Fixation Start in Block %d\n", varargin{2}, varargin{1});
+        case "trialFixationEnd"
+            eventMsg = sprintf("Trial %d Fixation End in Block %d\n", varargin{2}, varargin{1});
+        case "trialPresentStart"
+            eventMsg = sprintf("Trial %d Presentation Start in Block %d\n", varargin{2}, varargin{1});
+        case "trialPresentEnd"
+            eventMsg = sprintf("Trial %d Presentation End in Block %d\n", varargin{2}, varargin{1});
+        case "trialChoiceStart"
+            eventMsg = sprintf("Trial %d Choice Start in Block %d\n", varargin{2}, varargin{1});
+        case "trialChoiceEnd"
+            eventMsg = sprintf("Trial %d Choice End in Block %d\n", varargin{2}, varargin{1});
+        case "trialFeedbackStart"
+            eventMsg = sprintf("Trial %d Feedback Start in Block %d\n", varargin{2}, varargin{1});
+        case "trialFeedbackEnd"
+            eventMsg = sprintf("Trial %d Feedback End in Block %d\n", varargin{2}, varargin{1});
 
         % ERROR HANDLING
         otherwise
@@ -63,7 +87,7 @@ function EventCell = Create_Event(ID, EventType, varargin)
                 end
             catch ME
                 if ID.ForceEnv; rethrow(ME);
-                else; fprintf(ME);
+                else; fprintf(ME.message);
                 end
             end
     end

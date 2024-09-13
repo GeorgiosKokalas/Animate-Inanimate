@@ -1,3 +1,4 @@
+%% DESCRIPTION
 % Miscelaneous function that creates an event
 % Function creates a Matlab event, and any other event based on the experimental environment    
 % Input:
@@ -6,10 +7,6 @@
 %   - varargin: Anything else we may need
 % Output:
 %   - EventCell: A MATLAB Cell containing the event message and time of event    
-
-%% CHANGELOG
-% Georgios Kokalas - 6th Sept. 2024
-%   - Created the file
 
 %% CODE
 function EventCell = Create_Event(ID, EventType, varargin)
@@ -30,7 +27,26 @@ function EventCell = Create_Event(ID, EventType, varargin)
             eventMsg = "Task Aborted";
 
         % TASK SPECIFIC EVENTS
-
+        case "trialStart"
+            eventMsg = sprintf("Trial %d Start in Block %d\n", varargin{2}, varargin{1});
+        case "trialEnd"
+            eventMsg = sprintf("Trial %d End in Block %d\n", varargin{2}, varargin{1});
+        case "trialFixationStart"
+            eventMsg = sprintf("Trial %d Fixation Start in Block %d\n", varargin{2}, varargin{1});
+        case "trialFixationEnd"
+            eventMsg = sprintf("Trial %d Fixation End in Block %d\n", varargin{2}, varargin{1});
+        case "trialPresentationStart"
+            eventMsg = sprintf("Trial %d Presentation Start in Block %d\n", varargin{2}, varargin{1});
+        case "trialPresentationEnd"
+            eventMsg = sprintf("Trial %d Presentation End in Block %d", varargin{2}, varargin{1});
+        case "trialChoiceStart"
+            eventMsg = sprintf("Trial %d Choice Start in Block %d", varargin{2}, varargin{1});
+        case "trialChoiceEnd"
+            eventMsg = sprintf("Trial %d Choice End in Block %d", varargin{2}, varargin{1});
+        case "trialFeedbackStart"
+            eventMsg = sprintf("Trial %d Feedback Start in Block %d", varargin{2}, varargin{1});
+        case "trialFeedbackEnd"
+            eventMsg = sprintf("Trial %d Feedback End in Block %d", varargin{2}, varargin{1});
 
         % ERROR HANDLING
         otherwise
@@ -66,8 +82,13 @@ function EventCell = Create_Event(ID, EventType, varargin)
                 end
             catch ME
                 if ID.ForceEnv; rethrow(ME);
-                else; fprintf(ME);
+                else; fprintf(ME.message);
                 end
             end
     end
 end
+
+
+%% CHANGELOG
+% Georgios Kokalas - 6th Sept. 2024
+%   - Created the file

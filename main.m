@@ -11,7 +11,7 @@ function main()
 
     % STARTUP BEFORE STARTING THE TASK
     % Start up the experiment and provide the parameters that will be used in the experiment       
-    parameters = StartUp();
+    parameters = Start_Up();
     
     % RUN THE TASK
     Create_Event(parameters.ID, "taskStart")

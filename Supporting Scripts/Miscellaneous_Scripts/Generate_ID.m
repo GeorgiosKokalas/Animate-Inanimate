@@ -39,7 +39,7 @@ function ID = Generate_ID(ID)
                 ID = struct('Name', name, 'EmuNum', emuNum, 'EmuFileName', emuFileName, 'ExpEnv', 'Bcm-Emu', 'ForceEnv', forceEnv);
             catch ME
                 if forceEnv; rethrow(ME);
-                else; fprintf(ME);
+                else; fprintf(ME.message);
                 end
             end
         otherwise

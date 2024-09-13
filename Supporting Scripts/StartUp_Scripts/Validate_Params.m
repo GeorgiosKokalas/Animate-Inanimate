@@ -51,10 +51,18 @@ function Validate_Params(params)
         params.trial.choiceDurS = 0.4;
     end
 
-    %Evaluating photodiodeDurS
-    if ~is_pos(params.trial.photodiodeDurS)
-        disp("Inoperable value provided for params.trial.photodiodeDurS. Applying default...");
-        params.trial.photodiodeDurS = 0.5;
+    %Evaluating photoDiodeDurS
+    if ~is_pos(params.trial.photoDiodeDurS)
+        disp("Inoperable value provided for params.trial.photoDiodeDurS. Applying default...");
+        params.trial.photoDiodeDurS = 0.5;
+    end
+
+    %params.keys - VALUE EVALUATION
+    % Change all keys from strings to Keyboard indeces
+    KbName('UnifyKeyNames');
+    allKeys = fieldnames(params.keys);
+    for keyIdx = 1:length(allKeys)
+        params.keys.(allKeys{keyIdx}) = KbName(params.keys.(allKeys{keyIdx}));
     end
 end
 
@@ -63,7 +71,7 @@ end
 % Custom functions to make the code above more readable
 % Checks if a value is a single number
 function result = is_num(Input)
-    result = isscalar(Input) && is_numeric(Input);
+    result = isscalar(Input) && isnumeric(Input);
 end
 
 % Checks if a value is a positive number

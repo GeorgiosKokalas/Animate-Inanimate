@@ -14,7 +14,7 @@ function time = Draw_Photodiode(Pars, Color)
     
     if isempty(photodiodeRect)
         photodiodeRect = [0, Pars.screen.pixHeight*(5/6), ...
-                        Pars.screen.pixWidth/11, Pars.screen.pixHeight];
+                        Pars.screen.pixWidth/11, Pars.screen.window_height];
     end
 
     Screen('FillRect', Pars.screen.window,  Color, photodiodeRect);
@@ -25,8 +25,3 @@ end
 %% CHANGELOG
 % Georgios Kokalas - Summer 2024
 %   - Created the file
-
-% Georgios Kokalas - 9th Sept 2024
-%   - Added Color Options
-%   - made photodiodeRect persistent so it doesn't get constantly redefined   
-%   - changed naming conventions

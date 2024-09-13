@@ -8,7 +8,7 @@
 
 %% CODE
 function params = Insert_Params()
-    params = ParameterClass(Patient_Name);
+    params = ParameterClass();
     load('colors.mat','color_list');
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,19 +27,30 @@ function params = Insert_Params()
     % Text Size parameters - Determine the size of text in given situations
     params.text.size.default = 40;     % Natural Number - Determines the default text size
     params.text.size.present = 100;    % Natural Number - Determines the text size for the word shown for a full second
-    params.text.size.choices = 50;     % Natural Number - Determines the text size for the words Animate/Inanimate
+    params.text.size.choices = 75;     % Natural Number - Determines the text size for the words Animate/Inanimate
+
+    % Text Color Parameters
+    params.text.color.default = color_list.white;
     
     % Trial Parameters
     params.trial.num = 1;                 % Natural Number - Determines the number of trials per block
     params.trial.showIntro = true;        % Logical - Determines whether or not the introduction will be shown
-    params.trial.presentDurS = 1;         % Positive Number - Determines for how long the presented word will be visible for
+    params.trial.presentDurS = 0.4;         % Positive Number - Determines for how long the presented word will be visible for
     params.trial.choiceDurS = 0.4;        % Positive Number - Determines for how long the presented word will be visible for
-    params.trial.photoDiodeDurS = 0.25;   % Positive Number - Determines how long the photodiode will be shown for
+    params.trial.photoDiodeDurS = 0.15;    % Positive Number - Determines how long the photodiode will be shown for
+    params.trial.blockLength = 7;
     
     % ID Parameters
     params.ID.Name = 'TEST';        % String - Determines the name of the test subject
     params.ID.ExpEnv = 'Bcm-Emu';   % String - Determines the experimental environment
-    params.ID.ForceEnv = true;      % Logical - Determines if we will enforce errors associated with the experimental environment   
+    params.ID.ForceEnv = false;      % Logical - Determines if we will enforce errors associated with the experimental environment 
+
+    % keys Paramerters
+    params.keys.Left = 'LeftArrow';
+    params.keys.Right = 'RightArrow';
+    params.keys.Pause = 'P';
+    params.keys.Resume = 'R';
+    params.keys.Abort = 'ESCAPE';
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % End of Settings %

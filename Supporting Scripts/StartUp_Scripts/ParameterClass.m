@@ -11,6 +11,7 @@ classdef ParameterClass < handle
         outputDir
         expEvents
         ID
+        keys
     end
 
     methods
@@ -21,13 +22,17 @@ classdef ParameterClass < handle
             obj.outputDir;
             obj.expEvents;
             obj.ID = struct;
+            obj.keys = struct;
         end
 
         function new_event(obj, New_Event)
             obj.expEvents = [obj.expEvents; New_Event];
         end
 
-        function save(obj)
+        function save_events(obj)
+            saveLoc = fullfile(obj.outputDir, 'Events.mat');
+            events = obj.expEvents;
+            save(saveLoc, "events");
         end
     end
 end
@@ -36,13 +41,16 @@ end
 % Georgios Kokalas Summer 2024
 %   - Created the file
 
-% Georgios Kokalas 6th Sept. 2024
+% Georgios Kokalas - 6th Sept. 2024
 %   - Adjusted the file for this task
 %       - deleted unneeded class members like trial, target, avatar and disbtn
 %       - added ID
 
-% Georgios Kokalas 9th Sept. 2024
-%   - screen is now a class instead of a struct for more control over its members 
-%   - ajdusted naming conventions
+% Georgios Kokalas - 9th Sept. 2024
+%   - Screen is now a class instead of a struct for more control over its members 
+%   - Ajdusted naming conventions
 %   - Deleted Patient Name as an input to the constructor
 %   - obj.outputDir is now defined in Validate_Params.m
+
+% Georgios Kokalas - 10th Sept. 2024
+%   - Introduced a new property - keys: It stores the keys that  
