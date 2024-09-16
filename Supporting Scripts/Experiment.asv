@@ -9,7 +9,6 @@ function Experiment(Parameters)
     importWord = readtable("Words.xlsx");
     importBlock = importWord.Properties.VariableNames;
     wordList = cell(1, width(importWord));
-    ansList = cell(1,width(importWord));
     blockList = cell(1, width(importWord));
     numBlocks = width(importWord);
     numWords = 0;
