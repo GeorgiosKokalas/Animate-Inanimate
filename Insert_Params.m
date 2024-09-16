@@ -43,7 +43,7 @@ function params = Insert_Params()
     % ID Parameters
     params.ID.Name = 'TEST';        % String - Determines the name of the test subject
     params.ID.ExpEnv = 'Bcm-Emu';   % String - Determines the experimental environment
-    params.ID.ForceEnv = false;      % Logical - Determines if we will enforce errors associated with the experimental environment 
+    params.ID.ForceEnv = true;      % Logical - Determines if we will enforce errors associated with the experimental environment 
 
     % keys Paramerters
     params.keys.Left = 'LeftArrow';
