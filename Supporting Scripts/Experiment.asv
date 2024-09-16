@@ -9,6 +9,7 @@ function Experiment(Parameters)
     importWord = readtable("Words.xlsx");
     importBlock = importWord.Properties.VariableNames;
     wordList = cell(1, width(importWord));
+    ansList = cell(1,width(importWord));
     blockList = cell(1, width(importWord));
     numBlocks = width(importWord);
     numWords = 0;
@@ -50,7 +51,7 @@ function Experiment(Parameters)
         curWordList = wordList{blockIdx};
         
 
-        block_start(Parameters, blockIdx);
+        block_start(Parameters, blockIdx, choices);
         blockEvents = Create_Event(Parameters.ID, "blockStart", blockIdx);
         
         for trialIdx = 1:length(curWordList)
@@ -100,10 +101,10 @@ function Experiment(Parameters)
     end
     
     % Save the variables at the end of the experiment
-    save("Output.mat", "allChoices");
-
-    return
-
+    save("Output.mat", "allChoices", "Parameters");
+    Parameters.save_events()
+    
+    Screen('TextSize', Parameters.screen.window, Parameters.text.size.default);
     DrawFormattedText(Parameters.screen.window, 'End', 'center', 'center', 252:255);
     Flip_Screen(Parameters)
 end
@@ -116,9 +117,10 @@ end
 %   - Num_Blocks (The total number of blocks)
 %   - Cpu_Name   (The name of the cpu player)
 % Outputs: None
-function block_start(Pars, Block_Idx)
+function block_start(Pars, Block_Idx, Choices)
     % Generate the text to be printed
-    text = sprintf('Starting Block %d \n\n', Block_Idx);
+    text = sprintf('Starting Block %d\n', Block_Idx);
+    text = sprintf("%sChoose between %s and %s.\n", text, upper(Choices{1}), upper(Choices{2}));
     text = sprintf('%sPress any button to continue.', text);
     
     % Print the text and show it
