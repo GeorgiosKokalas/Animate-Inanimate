@@ -26,7 +26,7 @@ function ID = Generate_ID(ID)
             %   - ForceEnv: Whether or not to enforce the errors from the experimental environment     
             try
                 [emuNum,name] = getNextLogEntry();
-                emuFileName = sprintf('EMU-%04d_subj-%s_task-4MAB_run-%02d',emNum,sub_label,taskRunNum);
+                emuFileName = sprintf('EMU-%04d_subj-%s_task-Animate_Inanimate',emuNum,name);
                 
                 % Guide ForceEnv to either true or false
                 if isnan(forceEnv) || forceEnv == 0
