@@ -14,7 +14,9 @@ function Validate_Params(params)
     params.ID = Generate_ID(params.ID);
 
     % DEFINE THE OUTPUT DIRECTORY
-    params.outputDir = fullfile(pwd(),'Output', [params.ID.Name, '_' ,datestr(datetime('now'), 'yyyymmdd-HHMM')]);
+    % params.outputDir = fullfile(pwd(),'Output', [params.ID.Name, '_' ,datestr(datetime('now'), 'yyyymmdd-HHMM')]);
+    params.outputDir = fullfile(userpath(), 'PatientData', params.ID.Name, 'Animate_Inanimate', ...
+                                ['AnimateInanimate__', params.ID.Name, '_' ,datestr(datetime('now'), 'yyyymmdd_HHMM')]);
 
     %params.text.size - VALUE EVALUATION
     % Get all the size parameters

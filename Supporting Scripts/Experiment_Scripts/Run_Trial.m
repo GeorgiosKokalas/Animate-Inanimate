@@ -5,7 +5,7 @@
 %   - TrialIdx      (Which trial we are on)
 % Output : 
 
-function [output, trialEvents] = Run_Trial(Parameters, Word, Choices, BlockIdx, TrialIdx)
+function [output, trialEvents] = Run_Trial(Parameters, Word, Answer, Choices, BlockIdx, TrialIdx)
     %% PRE STAGE - Before the timer of the activity starts
     % Create a trial Start event
     load("colors.mat", "color_list");
@@ -76,8 +76,15 @@ function [output, trialEvents] = Run_Trial(Parameters, Word, Choices, BlockIdx, 
     
     % 3 - FEEDBACK
     trialEvents = [trialEvents; Create_Event(Parameters.ID, "trialFeedbackStart", BlockIdx, TrialIdx)];
-    if strcmpi(userChoice, Choices{1}); leftChoiceBg = color_list.blue; end
-    if strcmpi(userChoice, Choices{2}); rightChoiceBg = color_list.blue; end
+    
+    % Mark the response color
+    % Choose the appropriate color
+    answerColor = color_list.red;
+    if strcmpi(userChoice, Answer); answerColor = color_list.blue; end
+    
+    % Choose the appropriate choice
+    if strcmpi(userChoice, Choices{1}); leftChoiceBg = answerColor; end
+    if strcmpi(userChoice, Choices{2}); rightChoiceBg = answerColor; end
 
     % 3.1 - With the PhotoDiode
     stage_feedback(Parameters, Choices, color_list.white, leftChoiceBg, rightChoiceBg);
@@ -90,7 +97,8 @@ function [output, trialEvents] = Run_Trial(Parameters, Word, Choices, BlockIdx, 
 
 
     trialEvents = [trialEvents; Create_Event(Parameters.ID, "trialEnd", BlockIdx, TrialIdx)];
-    output = struct('fixationTime', fixationTime, 'userChoice', userChoice, 'responseTime', responseTime);    
+    output = struct('fixationTime', fixationTime, 'userChoice', userChoice, 'responseTime', responseTime, ...
+                    'correct', strcmpi(userChoice, Answer));    
 end
 
 %% HELPER FUNCTIONS

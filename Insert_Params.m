@@ -27,7 +27,7 @@ function params = Insert_Params()
     % Text Size parameters - Determine the size of text in given situations
     params.text.size.default = 40;     % Natural Number - Determines the default text size
     params.text.size.present = 100;    % Natural Number - Determines the text size for the word shown for a full second
-    params.text.size.choices = 75;     % Natural Number - Determines the text size for the words Animate/Inanimate
+    params.text.size.choices = 120;     % Natural Number - Determines the text size for the words Animate/Inanimate
 
     % Text Color Parameters
     params.text.color.default = color_list.white;

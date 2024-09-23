@@ -25,8 +25,8 @@ classdef ParameterClass < handle
             obj.keys = struct;
         end
 
-        function new_event(obj, New_Event)
-            obj.expEvents = [obj.expEvents; New_Event];
+        function new_event(obj, NewEvent)
+            obj.expEvents = [obj.expEvents; NewEvent];
         end
 
         function save_events(obj)

@@ -5,7 +5,7 @@
 %   - TrialIdx      (Which trial we are on)
 % Output : 
 
-function [output, trialEvents] = Run_Trial(Parameters, Word, BlockIdx, TrialIdx)
+function [output, trialEvents] = Run_Trial(Parameters, Word, Answer, Choices, BlockIdx, TrialIdx)
     %% PRE STAGE - Before the timer of the activity starts
     % Create a trial Start event
     load("colors.mat", "color_list");
@@ -46,20 +46,20 @@ function [output, trialEvents] = Run_Trial(Parameters, Word, BlockIdx, TrialIdx)
     % 2.1 - With the PhotoDiode
     trialEvents = [trialEvents; Create_Event(Parameters.ID, "trialChoiceStart", BlockIdx, TrialIdx)]; 
     startTime = GetSecs();
-    [userChoice, responseTime] = stage_choice(Parameters, color_list.white, Parameters.trial.photoDiodeDurS);
+    [userChoice, responseTime] = stage_choice(Parameters, Choices, color_list.white, Parameters.trial.photoDiodeDurS);
 
     % 2.2.1 - Present Without the Photodiode
-    if isempty(userChoice) || isempty(resposeTime)
-        stage_choice(Parameters, color_list.black, -1)
+    if isempty(userChoice)
+        stage_choice(Parameters, Choices, color_list.black, -1)
         while true
             [keyPressed, keyCode, keyTime] = Check_Keys(Parameters);
             if ~keyPressed; continue; end
             switch keyCode
                 case Parameters.keys.Left
-                    userChoice = 'Animate';
+                    userChoice = Choices{1};
                     break;
                 case Parameters.keys.Right
-                    userChoice = 'Inanimate';
+                    userChoice = Choices{2};
                     break;
                 case Parameters.keys.Abort
                     userChoice = 'Abort';
@@ -70,27 +70,35 @@ function [output, trialEvents] = Run_Trial(Parameters, Word, BlockIdx, TrialIdx)
         trialEvents = [trialEvents; Create_Event(Parameters.ID, "trialChoiceEnd", BlockIdx, TrialIdx)];
     else
         trialEvents = [trialEvents; Create_Event(Parameters.ID, "trialChoiceEnd", BlockIdx, TrialIdx)];
-        stage_choice(Parameters, color_list.black, -1);
+        stage_choice(Parameters, Choices, color_list.black, -1);
         Custom_Wait(Parameters.trial.photoDiodeDurS);
     end
     
     % 3 - FEEDBACK
     trialEvents = [trialEvents; Create_Event(Parameters.ID, "trialFeedbackStart", BlockIdx, TrialIdx)];
-    if strcmpi(userChoice, 'Animate'); leftChoiceBg = color_list.blue; end
-    if strcmpi(userChoice, 'Inanimate'); rightChoiceBg = color_list.blue; end
+    
+    % Mark the response color
+    % Choose the appropriate color
+    answerColor = color_list.red;
+    if strcmpi(userChoice, Answer); answerColor = color_list.blue; end
+    
+    % Choose the appropriate choice
+    if strcmpi(userChoice, Choices{1}); leftChoiceBg = answerColor; end
+    if strcmpi(userChoice, Choices{2}); rightChoiceBg = answerColor; end
 
     % 3.1 - With the PhotoDiode
-    stage_feedback(Parameters, color_list.white, leftChoiceBg, rightChoiceBg);
+    stage_feedback(Parameters, Choices, color_list.white, leftChoiceBg, rightChoiceBg);
     Custom_Wait(Parameters.trial.photoDiodeDurS);
 
     % 3.2 -Without the Photodiode
-    stage_feedback(Parameters, color_list.black, leftChoiceBg, rightChoiceBg)
+    stage_feedback(Parameters, Choices, color_list.black, leftChoiceBg, rightChoiceBg)
     Custom_Wait(Parameters.trial.choiceDurS - Parameters.trial.photoDiodeDurS);
     trialEvents = [trialEvents; Create_Event(Parameters.ID, "trialFeedbackEnd", BlockIdx, TrialIdx)];
 
 
     trialEvents = [trialEvents; Create_Event(Parameters.ID, "trialEnd", BlockIdx, TrialIdx)];
-    output = struct('fixationTime', fixationTime, 'userChoice', userChoice, 'responseTime', responseTime);    
+    output = struct('fixationTime', fixationTime, 'userChoice', userChoice, 'responseTime', responseTime, ...
+                    'correct', strcmpi(userChoice, Answer));    
 end
 
 %% HELPER FUNCTIONS
@@ -110,12 +118,12 @@ function stage_presentation(Parameters, Word, Color)
     Flip_Screen(Parameters);
 end
 
-function [choice, responseTime] = stage_choice(Parameters, Color, WaitTime)
+function [choice, responseTime] = stage_choice(Parameters, Choices, Color, WaitTime)
     Screen('TextSize', Parameters.screen.window, Parameters.text.size.choices);
-    DrawFormattedText2('Animate', 'win', Parameters.screen.window, 'sx', Parameters.screen.pixCenter(1) - 50, ...
+    DrawFormattedText2(Choices{1}, 'win', Parameters.screen.window, 'sx', Parameters.screen.pixCenter(1) - 50, ...
         'sy', Parameters.screen.pixHeight - 40, 'xalign', 'right', 'yalign','bottom', ...
         'baseColor', Parameters.text.color.default);
-    DrawFormattedText2('Inanimate', 'win', Parameters.screen.window, 'sx', Parameters.screen.pixCenter(1) + 50, ...
+    DrawFormattedText2(Choices{2}, 'win', Parameters.screen.window, 'sx', Parameters.screen.pixCenter(1) + 50, ...
         'sy', Parameters.screen.pixHeight - 40, 'xalign', 'left', 'yalign','bottom', ...
         'baseColor', Parameters.text.color.default);
     Draw_Photodiode(Parameters, Color);
@@ -131,25 +139,25 @@ function [choice, responseTime] = stage_choice(Parameters, Color, WaitTime)
         if ~keyPressed; continue; end
         switch keyCode
             case Parameters.keys.Left
-                choice = 'Left';
-                break;
+                choice = Choices{1};
+                return;
             case Parameters.keys.Right
-                choice = 'Right';
-                break;
+                choice = Choices{2};
+                return;
         end
     end
     responseTime = [];
 end
 
 
-function stage_feedback(Parameters, Color, LeftChoiceBg, RightChoiceBg)
+function stage_feedback(Parameters, Choices, Color, LeftChoiceBg, RightChoiceBg)
     Screen('TextSize', Parameters.screen.window, Parameters.text.size.choices);
     Screen('TextBackgroundColor', Parameters.screen.window, LeftChoiceBg);
-    DrawFormattedText2('Animate', 'win', Parameters.screen.window, 'sx', Parameters.screen.pixCenter(1) - 50, ...
+    DrawFormattedText2(Choices{1}, 'win', Parameters.screen.window, 'sx', Parameters.screen.pixCenter(1) - 50, ...
         'sy', Parameters.screen.pixHeight - 40, 'xalign', 'right', 'yalign','bottom', ...
         'baseColor', Parameters.text.color.default);
     Screen('TextBackgroundColor', Parameters.screen.window, RightChoiceBg);
-    DrawFormattedText2('Inanimate', 'win', Parameters.screen.window, 'sx', Parameters.screen.pixCenter(1) + 50, ...
+    DrawFormattedText2(Choices{2}, 'win', Parameters.screen.window, 'sx', Parameters.screen.pixCenter(1) + 50, ...
         'sy', Parameters.screen.pixHeight - 40, 'xalign', 'left', 'yalign','bottom', ...
         'baseColor', Parameters.text.color.default);
     Screen('TextBackgroundColor', Parameters.screen.window, zeros(1,4));

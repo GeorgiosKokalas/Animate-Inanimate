@@ -14,9 +14,8 @@ function main()
     parameters = Start_Up();
     
     % RUN THE TASK
-    Create_Event(parameters.ID, "taskStart")
+    parameters.new_event(Create_Event(parameters.ID, "taskStart"));
     Experiment(parameters);
-    Create_Event(parameters.ID, "taskStop")
     
     KbStrokeWait();
     sca;  
@@ -26,5 +25,5 @@ function main()
     
 
     % Remove all the directories from the path
-    % rmpath(genpath(cur_dir));
+    rmpath(genpath(curDir));
 end 

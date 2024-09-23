@@ -8,26 +8,42 @@ function Experiment(Parameters)
     % Get the word List and randomize it
     importWord = readtable("Words.xlsx");
     importBlock = importWord.Properties.VariableNames;
-    wordList = cell(1, width(importWord));
-    blockList = cell(1, width(importWord));
-    numBlocks = width(importWord);
+    wordList = cell(1, width(importWord)/2);
+    ansList = cell(1, width(importWord)/2);
+    blockList = cell(1, width(importWord)/2);
+    numBlocks = width(importWord)/2;
     numWords = 0;
+    blkIdx = 1;
+    
+    for importIdx = 1:2:length(importBlock)
+        blockList{blkIdx} = split(importBlock{importIdx}, "_");
 
-    for blkIdx = 1:length(importBlock)
-        blockList{blkIdx} = split(importBlock{blkIdx}, "_");
-        blockWords = importWord.(importBlock{blkIdx});
+        blockWords = importWord.(importBlock{importIdx});
+        blockAns = importWord.(importBlock{importIdx+1});
+
         blockWords(cellfun(@isempty,blockWords)) = [];
+        blockAns(cellfun(@isempty,blockAns)) = [];
+        repetitions = str2double(importBlock{importIdx+1}(4));
+        blockWords = repmat(blockWords, repetitions, 1);
+        blockAns = repmat(blockAns, repetitions, 1);
+
         blockLength = length(blockWords);
-        blockWords = blockWords(randperm(blockLength));
-        numWords = numWords + blockLength;
+        randomOrder = randperm(blockLength);
+        blockWords = blockWords(randomOrder);
+        blockAns = blockAns(randomOrder);
+ 
         wordList{blkIdx} = blockWords;
+        ansList{blkIdx} = blockAns;
+
+        numWords = numWords + blockLength;
+        blkIdx = blkIdx + 1;
     end
     
     wordIdx = 1;
     
     % Instantiate the trial and block indeces
-    allChoices = table('Size', [numWords, 4], 'VariableTypes', ["string", "string", "double", "double"], ...
-                       'VariableNames', ["Word", "Choice", "ResponseTime", "FixationTime"]);
+    allChoices = table('Size', [numWords, 6], 'VariableTypes', ["string", "string" "string", "double", "double", "double"], ...
+                       'VariableNames', ["Word", "Answer", "Choice", "Correct", "ResponseTime", "FixationTime"]);
     
     
     % Change to the directory that saves the data
@@ -44,10 +60,11 @@ function Experiment(Parameters)
 
     % Go through the word List
     for blockIdx = 1:numBlocks
-        blockChoices = table('Size', [length(wordList{blockIdx}), 4], 'VariableTypes', ["string", "string", "double", "double"], ...
-                       'VariableNames', ["Word", "Choice", "ResponseTime", "FixationTime"]);
+        blockChoices = table('Size', [length(wordList{blockIdx}), 6], 'VariableTypes', ["string", "string" "string", "double", "double", "double"], ...
+                       'VariableNames', ["Word", "Answer", "Choice", "Correct", "ResponseTime", "FixationTime"]);
         choices = blockList{blockIdx};
         curWordList = wordList{blockIdx};
+        curAnsList = ansList{blockIdx};
         
 
         block_start(Parameters, blockIdx, choices);
@@ -55,18 +72,23 @@ function Experiment(Parameters)
         
         for trialIdx = 1:length(curWordList)
             % Run the Trial
-            [output, trialEvents] = Run_Trial(Parameters, curWordList{trialIdx}, choices, blockIdx, trialIdx);
+            [output, trialEvents] = Run_Trial(Parameters, curWordList{trialIdx}, curAnsList{trialIdx},...
+                                              choices, blockIdx, trialIdx);
 
             % ASSIGN OUTPUT FOR STORAGE
             % Store the overall choices
             allChoices.Word(wordIdx) = curWordList{trialIdx};
+            allChoices.Answer(wordIdx) = curAnsList{trialIdx};
             allChoices.Choice(wordIdx) = output.userChoice;
+            allChoices.Correct(wordIdx) = output.correct;
             allChoices.ResponseTime(wordIdx) = output.responseTime;
             allChoices.FixationTime(wordIdx) = output.fixationTime;
 
             % Store the choices per block
             blockChoices.Word(trialIdx) = curWordList{trialIdx};
+            blockChoices.Answer(trialIdx) = curAnsList{trialIdx};
             blockChoices.Choice(trialIdx) = output.userChoice;
+            blockChoices.Correct(trialIdx) = output.correct;
             blockChoices.ResponseTime(trialIdx) = output.responseTime;
             blockChoices.FixationTime(trialIdx) = output.fixationTime;
 
@@ -79,10 +101,7 @@ function Experiment(Parameters)
             wordIdx = wordIdx+1;
 
             % If we need to abort, abort
-            if strcmpi(output.userChoice, 'Abort')
-                Parameters.new_event(Create_Event(Parameters.ID, "taskAbort"));
-                break;
-            end
+            if strcmpi(output.userChoice, 'Abort'); break; end
         end
 
         block_switch(Parameters, blockIdx);
@@ -96,16 +115,22 @@ function Experiment(Parameters)
         save(filename, "blockChoices", "blockEvents");
 
         % If we need to abort, abort
-        if strcmpi(output.userChoice, 'Abort');  break; end
+        if strcmpi(output.userChoice, 'Abort')
+            Parameters.new_event(Create_Event(Parameters.ID, "taskAbort"));
+            break; 
+        end
     end
+
+    Screen('TextSize', Parameters.screen.window, Parameters.text.size.default);
+    DrawFormattedText(Parameters.screen.window, 'End', 'center', 'center', 252:255);
+    Flip_Screen(Parameters);
+
+
+    Parameters.new_event(Create_Event(Parameters.ID, "taskStop"));
     
     % Save the variables at the end of the experiment
     save("Output.mat", "allChoices", "Parameters");
     Parameters.save_events()
-    
-    Screen('TextSize', Parameters.screen.window, Parameters.text.size.default);
-    DrawFormattedText(Parameters.screen.window, 'End', 'center', 'center', 252:255);
-    Flip_Screen(Parameters)
 end
 
 %% HELPER FUNCTIONS
