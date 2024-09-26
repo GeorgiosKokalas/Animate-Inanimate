@@ -94,7 +94,6 @@ function Experiment(Parameters)
 
             % Store the Events
             blockEvents = [blockEvents; trialEvents];
-            Parameters.new_event(blockEvents);
 
             % END OF LOOP OPERATIONS
             % Increment the trial number
@@ -125,8 +124,9 @@ function Experiment(Parameters)
     DrawFormattedText(Parameters.screen.window, 'End', 'center', 'center', 252:255);
     Flip_Screen(Parameters);
 
-
-    Parameters.new_event(Create_Event(Parameters.ID, "taskStop"));
+    if ~strcmpi(output.userChoice, 'Abort')
+        Parameters.new_event(Create_Event(Parameters.ID, "taskStop"));
+    end
     
     % Save the variables at the end of the experiment
     save("Output.mat", "allChoices", "Parameters");
